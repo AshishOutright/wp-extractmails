@@ -1,0 +1,31 @@
+# WordPress Core files
+wp-admin/
+
+# Sensitive & Environment configuration
+wp-config.php
+
+# Large media files / User uploads
+wp-content/uploads/
+wp-content/blogs.dir/
+wp-content/upgrade/
+wp-content/backup-db/
+wp-content/backups/
+wp-content/cache/
+wp-content/advanced-cache.php
+
+# Custom non-standard folders
+mysql/
+
+# Logs and cache files
+*.log
+*.sql
+*.tar
+*.gz
+*.zip
+
+# System & IDE files
+.DS_Store
+.htaccess
+Thumbs.db
+.vscode/
+.idea/

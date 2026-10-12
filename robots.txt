@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /wp-admin/
+Disallow: /*/feed/
+Disallow: /author/*/feed/
+Disallow: /comments/
+Disallow: /wp-json/
+Allow: /wp-admin/admin-ajax.php
+
+Sitemap: https://www.extractmails.com/sitemap_index.xml

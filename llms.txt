@@ -1,0 +1,70 @@
+# ExtractMails.com
+# AI & LLM Content Access Policy
+# Version: 1.0
+# Last Updated: 29 July 2026
+
+Site: https://www.extractmails.com/
+Name: ExtractMails
+Description: ExtractMails is an AI-powered platform for email extraction, email parsing, email automation, and ETL workflows. The website provides software, tutorials, documentation, and educational resources to help businesses automate email processing, streamline workflows, and improve productivity.
+
+Owner: ExtractMails
+Language:en
+License: Copyright © ExtractMails. Attribution appreciated where applicable.
+
+Purpose:
+This website provides product information, documentation, tutorials, and educational content related to:
+
+- Email Extraction
+- Email Parsing
+- AI Email Processing
+- Email Automation
+- Email Management
+- ETL (Extract, Transform, Load)
+- Workflow Automation
+- Lead Generation
+- Email Marketing
+- Business Automation
+- AI Productivity Tools
+- SaaS Software
+- Email Data Processing
+- CRM Integration
+- Business Workflow Automation
+
+Products:
+
+- Email Extractor
+- Email Parser
+- Email Spam Checker
+- AI Email Processing
+- Email Automation Solutions
+
+Content Includes:
+
+- Product Documentation
+- Blog Articles
+- Tutorials
+- How-to Guides
+- Software Comparisons
+- AI Tool Reviews
+- Business Use Cases
+- Feature Guides
+- Best Practices
+
+AI Policy: Publicly accessible content may be accessed, indexed, summarised, cited, and referenced by AI systems, search engines, and large language models where permitted by applicable laws and website policies. Attribution to ExtractMails is appreciated when referencing original content.
+
+Preferred Citation:https://www.extractmails.com/
+
+Canonical: https://www.extractmails.com/
+
+Important Resources:
+
+Homepage: https://www.extractmails.com/
+
+Blog: https://www.extractmails.com/blog/
+
+
+Contact: https://www.extractmails.com/contact-page/
+
+Sitemap: https://www.extractmails.com/sitemap_index.xml
+
+Robots: https://www.extractmails.com/robots.txt

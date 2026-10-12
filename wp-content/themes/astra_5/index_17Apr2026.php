@@ -1,0 +1,580 @@
+<?php
+/**
+ * The main template file.
+ *
+ * This is the most generic template file in a WordPress theme
+ * and one of the two required files for a theme (the other being style.css).
+ * It is used to display a page when nothing more specific matches a query.
+ * E.g., it puts together the home page when no home.php file exists.
+ *
+ * @link https://codex.wordpress.org/Template_Hierarchy
+ *
+ * @package Astra
+ * @since 1.0.0
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+get_header(); ?>
+
+
+<section class="max-w-[1600px] mx-auto px-6 py-20">
+
+  <!-- MAIN CONTAINER -->
+ <div class="relative rounded-[32px] overflow-hidden 
+           
+            px-10 md:px-16 pt-0 md:pt-0 pb-32 md:pb-36
+            flex flex-col md:flex-row items-center">
+
+
+
+            
+<div class="absolute w-[315.56px] h-[161.15px] left-[1358.32px] top-[230.31px] bg-[#98b0ff] blur-[107px] origin-top-left rotate-[-18.579deg]"></div>
+
+<div class="absolute w-[515.56px] h-[161.15px] left-[158.32px] top-[390.31px] bg-[#98b0ff] blur-[107px] origin-top-left rotate-[-18.579deg]"></div>
+
+
+
+<!-- <div class="absolute w-[525.08px] h-[82.15px] left-[185.53px] top-[766.46px] bg-[#00c979] blur-[47px] origin-top-left rotate-[-9.961deg]"></div>
+
+<div class="absolute w-[525.08px] h-[74.61px] left-[218px] top-[1658.83px] bg-[#00c979] blur-[47px] origin-top-left rotate-[-9.961deg]"></div>
+
+<div class="absolute w-[153.89px] h-[55.97px] left-[-56px] top-[847.02px] bg-[#00c979] blur-[81px] origin-top-left rotate-[-9.961deg]"></div> -->
+
+<div class="absolute w-[519.35px] h-[94.17px] left-[-219.02px] top-[-118.97px] bg-[#00c979] blur-[147px] origin-top-left rotate-[48.581deg]"></div>
+
+
+
+<div class="absolute w-[315.56px] h-[161.15px] left-[758.32px] top-[0.31px] bg-[#00c979] blur-[147px] origin-top-left rotate-[-18.579deg]"></div>
+<div class="absolute w-[315.56px] h-[161.15px] left-[1058.32px] top-[440.31px] bg-[#00c979] blur-[157px] origin-top-left rotate-[-18.579deg]"></div>
+    <!-- LEFT CONTENT -->
+    <div class="w-full md:w-1/2">
+
+      <h2 class="text-[30px] md:text-[46px] font-semibold text-[#0f172a] leading-tight">
+        Email Insights, Guides & <br> Automation Tips
+      </h2>
+
+      <p class="mt-4 text-[16px] text-gray-600 max-w-[480px] leading-relaxed">
+        Explore expert blogs on email extraction, marketing, Gmail management, and
+        automation to streamline your workflow and grow your business.
+      </p>
+
+    </div>
+
+    <!-- RIGHT IMAGE -->
+    <div class="w-full md:w-1/2 flex justify-center md:justify-end mt-10 md:mt-0">
+
+      <img src="https://www.extractmails.com/wp-content/uploads/2026/04/ChatGPT-Image-Mar-31-2026-01_32_30-PM-1.png"
+           class="w-[320px] md:w-[660px] object-contain"
+           alt="Blog Illustration">
+
+    </div>
+
+    <!-- FLOATING STATS CARD -->
+   <div class="absolute left-1/2 -translate-x-1/2 
+            bottom-10 md:bottom-12 
+            w-[92%] md:w-[82%] z-20">
+
+      <div class="bg-white rounded-[26px] 
+                  shadow-[0_10px_30px_rgba(0,0,0,0.08)]
+                  px-6 md:px-10 py-6 md:py-8">
+
+        <div class="grid grid-cols-2 md:grid-cols-4 text-center">
+
+          <!-- ITEM -->
+          <div class="md:border-r border-gray-200">
+            <p class="text-[34px] md:text-[38px] font-semibold text-[#1e2a78]">
+              <?php echo wp_count_posts()->publish; ?>
+            </p>
+            <p class="text-[22px] text-gray-600 mt-1  bg-[linear-gradient(271deg,#383CFF_1.04%,#030458_65.23%)] bg-clip-text text-transparent">Total Blogs</p>
+          </div>
+
+          <!-- ITEM -->
+          <div class="md:border-r border-gray-200">
+            <p class="text-[34px] md:text-[38px] font-semibold text-[#1e2a78]">
+              <?php
+              $week = new WP_Query([
+                'date_query' => [['after' => '7 days ago']],
+                'post_type' => 'post',
+                'post_status' => 'publish',
+                'fields' => 'ids'
+              ]);
+              echo $week->found_posts;
+              wp_reset_postdata();
+              ?>
+            </p>
+            <p class="text-[22px] text-gray-600 mt-1  bg-[linear-gradient(271deg,#383CFF_1.04%,#030458_65.23%)] bg-clip-text text-transparent">Last 7 Days</p>
+          </div>
+
+          <!-- ITEM -->
+          <div class="md:border-r border-gray-200">
+            <p class="text-[34px] md:text-[38px] font-semibold text-[#1e2a78]">
+              <?php
+              $year = new WP_Query([
+                'date_query' => [['after' => date('Y-01-01')]],
+                'post_type' => 'post',
+                'post_status' => 'publish',
+                'fields' => 'ids'
+              ]);
+              echo $year->found_posts;
+              wp_reset_postdata();
+              ?>
+            </p>
+            <p class="text-[22px] text-gray-600 mt-1  bg-[linear-gradient(271deg,#383CFF_1.04%,#030458_65.23%)] bg-clip-text text-transparent">This Year</p>
+          </div>
+
+          <!-- ITEM -->
+          <div>
+            <p class="text-[34px] md:text-[38px] font-semibold text-[#1e2a78]">
+              <?php
+              $last_year = date('Y') - 1;
+              $last = new WP_Query([
+                'date_query' => [[
+                  'after' => "$last_year-01-01",
+                  'before' => "$last_year-12-31",
+                  'inclusive' => true
+                ]],
+                'post_type' => 'post',
+                'post_status' => 'publish',
+                'fields' => 'ids'
+              ]);
+              echo $last->found_posts;
+              wp_reset_postdata();
+              ?>
+            </p>
+            <p class="text-[22px] text-gray-600 mt-1  bg-[linear-gradient(271deg,#383CFF_1.04%,#030458_65.23%)] bg-clip-text text-transparent">Last Year</p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+
+
+<style>
+  .searchbox:focus{outline: none; border: none; box-shadow: none; }
+  .searchbox{outline: none; border: none !important; box-shadow: none !important; background: transparent;}
+</style>
+
+
+
+
+
+<section class="max-w-[1500px] mx-auto px-6 pt-10 pb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-10">
+
+  <!-- LEFT SIDE -->
+  <div class="md:w-[60%]">
+    <h2 class="text-4xl  mb-6  bg-[linear-gradient(271deg,#383CFF_1.04%,#030458_65.23%)] bg-clip-text text-transparent">Our Blogs</h2>
+
+    <div class="flex flex-wrap items-center gap-3">
+
+      <!-- Active -->
+      <button class="px-5 py-2 rounded-[14px] text-sm font-medium bg-[#1a237e] text-white">
+        All
+      </button>
+
+      <!-- Others -->
+      <button class="px-5 py-2 rounded-[14px] text-sm font-medium border border-[#1a237e] text-[#1a237e] hover:bg-[#1a237e] hover:text-white transition">
+        SEO
+      </button>
+
+      <button class="px-5 py-2 rounded-[14px] text-sm font-medium border border-[#1a237e] text-[#1a237e] hover:bg-[#1a237e] hover:text-white transition">
+        IoT
+      </button>
+
+      <button class="px-5 py-2 rounded-[14px] text-sm font-medium border border-[#1a237e] text-[#1a237e] hover:bg-[#1a237e] hover:text-white transition">
+        AI Tools
+      </button>
+
+      <button class="px-5 py-2 rounded-[14px] text-sm font-medium border border-[#1a237e] text-[#1a237e] hover:bg-[#1a237e] hover:text-white transition">
+        AI
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- RIGHT SIDE -->
+  <div class="md:w-[35%] flex flex-col items-end gap-4">
+
+    <!-- Search Bar -->
+    <form role="search" method="get" action="<?php echo esc_url(home_url('/')); ?>"
+      class="flex items-center w-full max-w-md bg-white border border-gray-200 rounded-full px-4 py-2 shadow-sm">
+
+      <!-- Icon -->
+     <img src="https://www.extractmails.com/wp-content/uploads/2026/04/search-1-1.png" alt="">
+
+      <!-- Input -->
+      <input type="search" name="s"  class="searchbox" 
+  placeholder="Search the blog..."
+  class="flex-1 bg-transparent outline-none border-none ring-0 focus:outline-none focus:ring-0 focus:border-none text-sm text-gray-600">
+
+      <!-- Button -->
+      <button type="submit"
+        class="ml-3 bg-[#1a237e] hover:bg-[#0d1b5e] text-white text-sm font-medium px-5 py-1.5 rounded-full transition">
+        Search
+      </button>
+    </form>
+
+
+       <style>
+        /* Style the dropdown like the image */
+#category-dropdown {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  background: linear-gradient(180deg, #0e107b, #2d31dc)!important;
+  color: #fff;
+  font-weight: 600;
+
+  border: none;
+  border-radius: 50px;
+  padding: 10px 45px 10px 20px;
+
+  cursor: pointer;
+  outline: none;
+
+  /* FIXED SVG (encoded) */
+  background-image: url("data:image/svg+xml,%3Csvg fill='white' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 7l5 5 5-5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 16px;
+}
+
+#category-dropdown::-ms-expand {
+  display: none;
+}
+
+/* Custom arrow */
+#category-dropdown {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='20' viewBox='0 0 20 20' width='20' xmlns='http://www.w3.org/2000/svg'><path d='M5 7l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  background-size: 16px;
+}
+
+#category-dropdown option {
+  color: #000;
+}
+
+#category-dropdown option:first-child {
+  color: #fff;
+}
+
+/* Remove default arrow in IE */
+#category-dropdown::-ms-expand {
+  display: none;
+}
+      </style>
+
+    <!-- Category Dropdown Button -->
+    <div class=" col-lg-2 col-md-2  d-md-flex justify-content-evenly align-items-center ">
+       <form action="<?php echo esc_url(home_url('/')); ?>" method="get">
+      <?php
+        wp_dropdown_categories(array(
+          'show_option_all' => 'All Categories',
+          'orderby'         => 'name',
+          'order'           => 'ASC',
+          'hide_empty'      => 0,
+          'taxonomy'        => 'category',
+          'value_field'     => 'term_id',
+          'hierarchical'    => true,
+          'name'            => 'cat',
+          'id'              => 'category-dropdown',
+          'class'           => 'form-select rounded-pill shadow-sm border-0 bg-white',
+        ));
+      ?>
+    </form>
+      </div>
+
+      <script>
+  document.getElementById('category-dropdown').addEventListener('change', function () {
+    this.form.submit();
+  });
+</script>
+
+  </div>
+
+</section>
+
+
+<!-- ================= BLOG GRID ================= -->
+
+
+ <!-- ================= BLOG GRID ================= -->
+<section class="max-w-[1500px] mx-auto px-4 ">
+
+<?php
+/* ===== PAGINATION FIX ===== */
+$paged = get_query_var('paged') ? get_query_var('paged') : 1;
+
+/* ===== WORDPRESS QUERY ===== */
+$args = array(
+    'post_type'      => 'post',
+    'posts_per_page' => 9,
+    'paged'          => $paged,
+    'post_status'    => 'publish'
+);
+
+$query = new WP_Query($args);
+?>
+
+<div id="articlesGrid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+<?php if($query->have_posts()): ?>
+<?php while($query->have_posts()): $query->the_post(); ?>
+
+<article class="transition duration-300">
+
+    <?php if(has_post_thumbnail()): ?>
+        <a href="<?php the_permalink(); ?>">
+            <?php the_post_thumbnail('medium_large',['class'=>'rounded-2xl w-full h-60 object-cover']); ?>
+        </a>
+    <?php endif; ?>
+
+    <div class="p-5">
+
+        <h3 class="font-semibold text-[25px] mb-2 leading-snug">
+            <a href="<?php the_permalink(); ?>" class="text-gray-900 hover:text-blue-600 transition">
+                <?php echo wp_trim_words(get_the_title() , 4,'...'); ?>
+            </a>
+        </h3>
+
+        <p class="text-gray-500 text-sm mb-4">
+            <?php echo wp_trim_words(get_the_excerpt(),15,'...'); ?>
+        </p>
+
+        <div class="flex items-center gap-2 text-gray-500 text-sm">
+            <img src="https://www.extractmails.com/wp-content/uploads/2026/04/Generic-avatar-3.png" class="w-6 h-6 rounded-full">
+            <span>Editorial Team</span>
+            <span>•</span>
+            <span><?php echo get_the_date('j M Y'); ?></span>
+        </div>
+
+    </div>
+
+</article>
+
+<?php endwhile; ?>
+<?php else: ?>
+<p>No posts found.</p>
+<?php endif; ?>
+
+<?php wp_reset_postdata(); ?>
+
+</div>
+
+
+<!-- ================= REAL WORDPRESS PAGINATION ================= -->
+<div class="outright-pagination flex justify-center mt-14">
+
+<?php
+echo paginate_links(array(
+    'total'      => $query->max_num_pages,
+    'current'    => $paged,
+    'mid_size'   => 2,
+    'prev_text'  => '‹',
+    'next_text'  => '›',
+    'type'       => 'list',
+));
+?>
+
+</div>
+
+</section>
+
+
+<style>
+  /* ===== OUTRIGHT PAGINATION DESIGN ===== */
+
+.outright-pagination{
+    display:flex;
+    justify-content:center;
+    margin-top:60px;
+}
+
+.outright-pagination ul{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    padding:14px 22px;
+    background:#fff;
+    border-radius:40px;
+    box-shadow:0 8px 18px rgba(0,0,0,0.12);
+    list-style:none;
+    margin:0;
+}
+
+.outright-pagination li{
+    list-style:none;
+}
+
+.outright-pagination a,
+.outright-pagination span{
+    text-decoration:none;
+    color:#111;
+    font-weight:500;
+    font-size:16px;
+    padding:8px 12px;
+    border-radius:50%;
+    transition:all .25s ease;
+}
+
+.outright-pagination a:hover{
+    background:#f3f4f6;
+}
+
+.outright-pagination .current{
+    background:#000;
+    color:#fff;
+    width:38px;
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    font-weight:600;
+}
+
+.outright-pagination .prev,
+.outright-pagination .next{
+    border-radius:20px;
+    padding:8px 14px;
+}
+
+</style>
+
+
+
+
+
+
+
+
+<!-- ================= CATEGORY BUTTON JS ================= -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const buttons = document.querySelectorAll(".category-btn");
+
+  buttons.forEach(button => {
+    button.addEventListener("click", function () {
+
+      buttons.forEach(btn => btn.classList.remove("active"));
+      this.classList.add("active");
+
+      const link = this.getAttribute("data-link");
+      if(link){
+        window.location.href = link;
+      }
+    });
+  });
+
+});
+</script>
+
+
+
+
+<section class="max-w-[1500px] mx-auto px-6 py-10 ">
+
+  <!-- Header -->
+  <div class="flex justify-between items-start mb-10 border-t py-10">
+    <h2 class="text-3xl font-semibold text-[#2d3dbf]">Popular Blogs</h2>
+
+    <p class="text-sm text-gray-600 max-w-md text-right">
+      Our Popular blog post is live—packed with fresh insight and inspiration.
+      Take a quick read and join the conversation!
+    </p>
+  </div>
+
+  <!-- Blog Grid -->
+  <div class="grid md:grid-cols-3 gap-8">
+
+    <?php
+    $args = array(
+      'post_type' => 'post',
+      'posts_per_page' => 3,
+      'post_status' => 'publish'
+    );
+
+    $query = new WP_Query($args);
+
+    if ($query->have_posts()) :
+      while ($query->have_posts()) : $query->the_post();
+    ?>
+
+    <!-- Card -->
+    <div class="group">
+
+      <!-- Thumbnail -->
+      <div class="relative overflow-hidden rounded-2xl mb-4">
+        <a href="<?php the_permalink(); ?>">
+          <?php if (has_post_thumbnail()) : ?>
+            <?php the_post_thumbnail('large', ['class' => 'w-full h-[220px] object-cover group-hover:scale-105 transition duration-300']); ?>
+          <?php endif; ?>
+        </a>
+
+        <!-- Date Badge -->
+        <span class="absolute bottom-3 right-3 bg-white/80 text-xs px-3 py-1 rounded-full text-gray-600">
+          <?php echo get_the_date('d M, Y'); ?>
+        </span>
+      </div>
+
+      <!-- Title -->
+      <h3 class="text-lg font-semibold text-gray-800 leading-snug mb-2">
+        <a href="<?php the_permalink(); ?>" class="hover:text-[#2d3dbf] transition">
+          <?php echo wp_trim_words(get_the_title(), 5 , '...'); ?>
+        </a>
+      </h3>
+
+      <!-- Excerpt -->
+      <p class="text-sm text-gray-500 mb-4">
+        <?php echo wp_trim_words(get_the_excerpt(), 18, '...'); ?>
+      </p>
+
+      <!-- Author -->
+      <div class="flex items-center gap-2">
+       <img src="https://www.extractmails.com/wp-content/uploads/2026/04/Generic-avatar-3.png" alt="">
+        <span class="text-sm text-gray-700">
+          <?php the_author(); ?>
+        </span>
+      </div>
+
+    </div>
+
+    <?php
+      endwhile;
+      wp_reset_postdata();
+    endif;
+    ?>
+
+  </div>
+  
+
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<?php get_footer() ?>
