@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: EM Docs (CPT + API)
- * Description: "Docs" post type. URL is /docs/post-title/ when no category is chosen, and /docs/category/post-title/ (or /docs/parent/child/post-title/) when a category is chosen. Includes a JSON action endpoint that only manages this post type.
- * Version: 2.0.0
+ * Plugin Name: EM Docs Endpoint
+ * Description: Install on EVERY site that should receive content. Adds the "Docs" post type (/docs/category/post-title/) and a key-protected JSON endpoint (/wp-json/extractmails/v1/docs) for create/fetch/update/publish/draft/delete on blog posts and docs. It has no controls of its own: the main site's "EM Network Hub" plugin uses this endpoint.
+ * Version: 3.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -21,7 +21,7 @@ function em_docs_register() {
 		'public'            => true,
 		'show_in_rest'      => true,
 		'show_admin_column' => true,
-		'rewrite'           => false,          // URLs are handled by our own rules below
+		'rewrite'           => false,
 		'query_var'         => EM_DOCS_TAX,
 	] );
 
@@ -33,17 +33,13 @@ function em_docs_register() {
 		'show_in_rest' => true,
 		'supports'     => [ 'title', 'editor', 'excerpt', 'thumbnail', 'author', 'revisions' ],
 		'taxonomies'   => [ EM_DOCS_TAX ],
-		'rewrite'      => false,               // URLs are handled by our own rules below
+		'rewrite'      => false,
 		'query_var'    => false,
 	] );
 
-	// /docs/
 	add_rewrite_rule( '^docs/?$', 'index.php?post_type=' . EM_DOCS_CPT, 'top' );
-	// /docs/page/2/
 	add_rewrite_rule( '^docs/page/([0-9]+)/?$', 'index.php?post_type=' . EM_DOCS_CPT . '&paged=$matches[1]', 'top' );
-	// /docs/category/page/2/
 	add_rewrite_rule( '^docs/(.+?)/page/([0-9]+)/?$', 'index.php?em_docs_path=$matches[1]&paged=$matches[2]', 'top' );
-	// /docs/anything  or  /docs/cat/sub/anything   (resolved in the "request" filter)
 	add_rewrite_rule( '^docs/(.+?)/?$', 'index.php?em_docs_path=$matches[1]', 'top' );
 }
 add_action( 'init', 'em_docs_register', 0 );
@@ -61,10 +57,8 @@ register_deactivation_hook( __FILE__, 'flush_rewrite_rules' );
 
 
 /* ==================================================================
- * 2. PATH HELPERS
+ * 2. PATH HELPERS (docs URLs)
  * ================================================================== */
-
-// "parent/child" path for a category term.
 function em_docs_term_path( $term ): string {
 	$path = $term->slug;
 	foreach ( get_ancestors( $term->term_id, EM_DOCS_TAX, 'taxonomy' ) as $parent_id ) {
@@ -74,7 +68,6 @@ function em_docs_term_path( $term ): string {
 	return $path;
 }
 
-// Deepest category assigned to a post (or null when none).
 function em_docs_primary_term( int $post_id ) {
 	$terms = get_the_terms( $post_id, EM_DOCS_TAX );
 	if ( ! $terms || is_wp_error( $terms ) ) return null;
@@ -84,14 +77,12 @@ function em_docs_primary_term( int $post_id ) {
 	return $terms[0];
 }
 
-// Path after /docs/ for a post:  "title"  or  "category/title"
 function em_docs_post_path( int $post_id, string $slug = '' ): string {
 	$slug = $slug ?: get_post_field( 'post_name', $post_id );
 	$term = em_docs_primary_term( $post_id );
 	return $term ? em_docs_term_path( $term ) . '/' . $slug : $slug;
 }
 
-// Find a category from path segments ["crm","imports"].
 function em_docs_term_from_path( array $parts ) {
 	$parent = 0;
 	$term   = null;
@@ -112,13 +103,11 @@ function em_docs_term_from_path( array $parts ) {
 
 
 /* ==================================================================
- * 3. PERMALINKS
+ * 3. PERMALINKS (docs)
  * ================================================================== */
-
-// Single doc link
 add_filter( 'post_type_link', function ( $link, $post, $leavename = false ) {
 	if ( EM_DOCS_CPT !== $post->post_type ) return $link;
-	if ( ! in_array( $post->post_status, [ 'publish', 'private' ], true ) ) return $link; // drafts keep ?p=ID preview links
+	if ( ! in_array( $post->post_status, [ 'publish', 'private' ], true ) ) return $link;
 
 	$term = em_docs_primary_term( $post->ID );
 	$name = $leavename ? '%postname%' : $post->post_name;
@@ -127,13 +116,11 @@ add_filter( 'post_type_link', function ( $link, $post, $leavename = false ) {
 	return user_trailingslashit( home_url( 'docs/' . $path ) );
 }, 10, 3 );
 
-// Category link  ->  /docs/crm/  or  /docs/crm/imports/
 add_filter( 'term_link', function ( $link, $term, $taxonomy ) {
 	if ( EM_DOCS_TAX !== $taxonomy ) return $link;
 	return user_trailingslashit( home_url( 'docs/' . em_docs_term_path( $term ) ) );
 }, 10, 3 );
 
-// Archive link -> /docs/
 add_filter( 'post_type_archive_link', function ( $link, $post_type ) {
 	return EM_DOCS_CPT === $post_type ? user_trailingslashit( home_url( 'docs' ) ) : $link;
 }, 10, 2 );
@@ -141,9 +128,6 @@ add_filter( 'post_type_archive_link', function ( $link, $post_type ) {
 
 /* ==================================================================
  * 4. RESOLVE /docs/... URLS
- *    /docs/the-testing-doc/        -> doc without a category
- *    /docs/new/the-testing-doc/    -> doc inside category "new"
- *    /docs/new/                    -> category archive
  * ================================================================== */
 add_filter( 'request', function ( $qv ) {
 	if ( ! isset( $qv['em_docs_path'] ) ) return $qv;
@@ -154,7 +138,6 @@ add_filter( 'request', function ( $qv ) {
 
 	if ( ! $parts ) return [ 'post_type' => EM_DOCS_CPT ];
 
-	// 1) A doc? (doc slugs are unique inside the post type)
 	$ids = get_posts( [
 		'post_type'   => EM_DOCS_CPT,
 		'name'        => end( $parts ),
@@ -165,38 +148,34 @@ add_filter( 'request', function ( $qv ) {
 	if ( $ids && ! $paged ) {
 		$canonical = em_docs_post_path( $ids[0] );
 		if ( implode( '/', $parts ) !== $canonical ) {
-			wp_safe_redirect( get_permalink( $ids[0] ), 301 ); // wrong/old category path -> correct URL
+			wp_safe_redirect( get_permalink( $ids[0] ), 301 );
 			exit;
 		}
 		return [ 'p' => $ids[0], 'post_type' => EM_DOCS_CPT ];
 	}
 
-	// 2) A category archive?
 	if ( $term = em_docs_term_from_path( $parts ) ) {
 		$out = [ 'post_type' => EM_DOCS_CPT, EM_DOCS_TAX => $term->slug ];
 		if ( $paged ) $out['paged'] = $paged;
 		return $out;
 	}
 
-	// 3) Nothing matched
 	return [ 'error' => 404 ];
 } );
 
 
 /* ==================================================================
  * 5. JSON ACTION ENDPOINT   POST /wp-json/extractmails/v1/docs
- *    Auth: WordPress Application Passwords (Basic Auth)
+ *
+ *    "table": "docs"  -> Docs post type   (doc_category)
+ *    "table": "blog"  -> Blog posts       (category + tags)
+ *       aliases: doc, blogs, post, posts
+ *
+ * AUTH (wp-config.php):
+ *   define( 'EM_DOCS_API_KEY',     'long-random-string' );
+ *   define( 'EM_DOCS_API_USER_ID', 1 );
+ * Send as header  X-API-Key: ...   or JSON  "api_key": "..."
  * ================================================================== */
-/*
- * AUTH: secret API key.
- * Add these 2 lines to wp-config.php (above "That's all, stop editing!"):
- *
- *   define( 'EM_DOCS_API_KEY',     'put-a-long-random-string-here' );
- *   define( 'EM_DOCS_API_USER_ID', 1 );   // the WordPress user ID the API acts as (an admin)
- *
- * Send the key either as header   X-API-Key: your-key
- * or inside the JSON body as      "api_key": "your-key"
- */
 add_action( 'rest_api_init', function () {
 	register_rest_route( 'extractmails/v1', '/docs', [
 		'methods'             => 'POST',
@@ -206,7 +185,6 @@ add_action( 'rest_api_init', function () {
 } );
 
 function em_docs_authorize( WP_REST_Request $req ) {
-	// Normal logged-in users (cookie / application password) still work.
 	if ( current_user_can( 'edit_posts' ) ) return true;
 
 	if ( ! defined( 'EM_DOCS_API_KEY' ) || strlen( EM_DOCS_API_KEY ) < 16 ) {
@@ -224,36 +202,54 @@ function em_docs_authorize( WP_REST_Request $req ) {
 	if ( ! get_userdata( $user_id ) ) {
 		return new WP_Error( 'bad_user', 'EM_DOCS_API_USER_ID is not a valid user.', [ 'status' => 500 ] );
 	}
-	wp_set_current_user( $user_id ); // all capability checks below run as this user
+	wp_set_current_user( $user_id );
 	return true;
+}
+
+/* ---------- table config ---------- */
+function em_docs_table_cfg( string $table ): ?array {
+	$tables = [
+		'docs' => [ 'key' => 'docs', 'post_type' => EM_DOCS_CPT, 'tax' => EM_DOCS_TAX, 'tag_tax' => null ],
+		'blog' => [ 'key' => 'blog', 'post_type' => 'post',      'tax' => 'category',  'tag_tax' => 'post_tag' ],
+	];
+	$aliases = [ 'docs' => 'docs', 'doc' => 'docs', 'blog' => 'blog', 'blogs' => 'blog', 'post' => 'blog', 'posts' => 'blog' ];
+	$key = $aliases[ strtolower( trim( $table ) ) ] ?? null;
+	return $key ? $tables[ $key ] : null;
 }
 
 function em_docs_handle( WP_REST_Request $req ) {
 	$p      = $req->get_json_params() ?: [];
 	$action = $p['action'] ?? '';
-	$table  = $p['table'] ?? 'docs';
+	$cfg    = em_docs_table_cfg( (string) ( $p['table'] ?? 'docs' ) );
 
-	if ( ! in_array( $table, [ 'docs', 'doc' ], true ) ) {
-		return new WP_Error( 'bad_table', 'Only the docs post type is supported.', [ 'status' => 400 ] );
+	if ( ! $cfg ) {
+		return new WP_Error( 'bad_table', 'Unknown table. Use "docs" or "blog".', [ 'status' => 400 ] );
 	}
 
 	switch ( $action ) {
-		case 'fetch':   return em_docs_fetch( $p );
-		case 'create':  return em_docs_create( $p );
-		case 'update':  return em_docs_update( $p );
-		case 'publish': return em_docs_set_status( $p, 'publish' );
-		case 'draft':   return em_docs_set_status( $p, 'draft' );
-		case 'delete':  return em_docs_delete( $p );
+		case 'fetch':   return em_docs_fetch( $p, $cfg );
+		case 'create':  return em_docs_create( $p, $cfg );
+		case 'update':  return em_docs_update( $p, $cfg );
+		case 'publish': return em_docs_set_status( $p, $cfg, 'publish' );
+		case 'draft':   return em_docs_set_status( $p, $cfg, 'draft' );
+		case 'delete':  return em_docs_delete( $p, $cfg );
 	}
 	return new WP_Error( 'bad_action', 'Unknown action. Use fetch|create|update|publish|draft|delete.', [ 'status' => 400 ] );
 }
 
 /* ---------- helpers ---------- */
+function em_docs_terms_out( int $post_id, string $tax ): array {
+	$terms = wp_get_post_terms( $post_id, $tax );
+	if ( is_wp_error( $terms ) ) return [];
+	return array_map( function ( $t ) {
+		return [ 'id' => $t->term_id, 'name' => $t->name, 'slug' => $t->slug, 'parent' => $t->parent ];
+	}, $terms );
+}
 
-function em_docs_row( WP_Post $post ): array {
-	$cats = wp_get_post_terms( $post->ID, EM_DOCS_TAX );
-	return [
+function em_docs_row( WP_Post $post, array $cfg ): array {
+	$row = [
 		'id'            => $post->ID,
+		'table'         => $cfg['key'],
 		'title'         => $post->post_title,
 		'slug'          => $post->post_name,
 		'content'       => $post->post_content,
@@ -263,16 +259,18 @@ function em_docs_row( WP_Post $post ): array {
 		'date_entered'  => $post->post_date,
 		'date_modified' => $post->post_modified,
 		'url'           => get_permalink( $post ),
-		'categories'    => is_wp_error( $cats ) ? [] : array_map( function ( $t ) {
-			return [ 'id' => $t->term_id, 'name' => $t->name, 'slug' => $t->slug, 'parent' => $t->parent ];
-		}, $cats ),
+		'categories'    => em_docs_terms_out( $post->ID, $cfg['tax'] ),
 	];
+	if ( $cfg['tag_tax'] ) {
+		$row['tags'] = em_docs_terms_out( $post->ID, $cfg['tag_tax'] );
+	}
+	return $row;
 }
 
-function em_docs_get_doc( $id ) {
+function em_docs_get_doc( $id, array $cfg ) {
 	$post = get_post( (int) $id );
-	if ( ! $post || EM_DOCS_CPT !== $post->post_type ) {
-		return new WP_Error( 'not_found', 'Doc not found (or not a docs post).', [ 'status' => 404 ] );
+	if ( ! $post || $cfg['post_type'] !== $post->post_type ) {
+		return new WP_Error( 'not_found', 'Item not found in table "' . $cfg['key'] . '".', [ 'status' => 404 ] );
 	}
 	return $post;
 }
@@ -305,16 +303,17 @@ function em_docs_date_bounds( array $p ): ?array {
 }
 
 /* ---------- FETCH ---------- */
-function em_docs_fetch( array $p ) {
+function em_docs_fetch( array $p, array $cfg ) {
 	$per_page = min( 100, max( 1, (int) ( $p['per_page'] ?? 20 ) ) );
 	$page     = max( 1, (int) ( $p['page'] ?? 1 ) );
 
 	$args = [
-		'post_type'      => EM_DOCS_CPT,
-		'posts_per_page' => $per_page,
-		'paged'          => $page,
-		'post_status'    => 'any',
-		'order'          => ( strtoupper( $p['order_dir'] ?? 'DESC' ) === 'ASC' ) ? 'ASC' : 'DESC',
+		'post_type'           => $cfg['post_type'],
+		'posts_per_page'      => $per_page,
+		'paged'               => $page,
+		'post_status'         => 'any',
+		'ignore_sticky_posts' => true,
+		'order'               => ( strtoupper( $p['order_dir'] ?? 'DESC' ) === 'ASC' ) ? 'ASC' : 'DESC',
 	];
 
 	$order_map = [ 'date_entered' => 'date', 'date_modified' => 'modified', 'title' => 'title', 'id' => 'ID', 'slug' => 'name' ];
@@ -328,8 +327,16 @@ function em_docs_fetch( array $p ) {
 	if ( ! empty( $f['author_id'] ) || ! empty( $f['assigned_user_id'] ) ) {
 		$args['author'] = (int) ( $f['author_id'] ?? $f['assigned_user_id'] );
 	}
+
+	$tax_query = [];
 	if ( ! empty( $f['category'] ) ) {
-		$args['tax_query'] = [ [ 'taxonomy' => EM_DOCS_TAX, 'field' => 'slug', 'terms' => (array) $f['category'] ] ];
+		$tax_query[] = [ 'taxonomy' => $cfg['tax'], 'field' => 'slug', 'terms' => (array) $f['category'] ];
+	}
+	if ( ! empty( $f['tag'] ) && $cfg['tag_tax'] ) {
+		$tax_query[] = [ 'taxonomy' => $cfg['tag_tax'], 'field' => 'slug', 'terms' => (array) $f['tag'] ];
+	}
+	if ( $tax_query ) {
+		$args['tax_query'] = count( $tax_query ) > 1 ? array_merge( [ 'relation' => 'AND' ], $tax_query ) : $tax_query;
 	}
 	if ( ! empty( $f['id'] ) ) $args['p'] = (int) $f['id'];
 
@@ -358,13 +365,14 @@ function em_docs_fetch( array $p ) {
 	if ( $search_filter ) remove_filter( 'posts_search', $search_filter );
 
 	$fields = $p['fields'] ?? [];
-	$rows   = array_map( function ( $post ) use ( $fields ) {
-		$row = em_docs_row( $post );
+	$rows   = array_map( function ( $post ) use ( $fields, $cfg ) {
+		$row = em_docs_row( $post, $cfg );
 		return $fields ? array_intersect_key( $row, array_flip( $fields ) ) : $row;
 	}, $q->posts );
 
 	return [
 		'success'     => true,
+		'table'       => $cfg['key'],
 		'total'       => (int) $q->found_posts,
 		'total_pages' => (int) $q->max_num_pages,
 		'page'        => $page,
@@ -374,14 +382,14 @@ function em_docs_fetch( array $p ) {
 }
 
 /* ---------- CREATE ---------- */
-function em_docs_create( array $p ) {
+function em_docs_create( array $p, array $cfg ) {
 	if ( empty( $p['title'] ) ) return new WP_Error( 'no_title', 'title is required.', [ 'status' => 400 ] );
 
 	$status = in_array( $p['status'] ?? 'draft', [ 'draft', 'publish', 'pending', 'private' ], true ) ? $p['status'] : 'draft';
 	if ( 'publish' === $status && ! current_user_can( 'publish_posts' ) ) $status = 'pending';
 
 	$id = wp_insert_post( [
-		'post_type'    => EM_DOCS_CPT,
+		'post_type'    => $cfg['post_type'],
 		'post_title'   => sanitize_text_field( $p['title'] ),
 		'post_content' => wp_kses_post( $p['content'] ?? '' ),
 		'post_excerpt' => sanitize_textarea_field( $p['excerpt'] ?? '' ),
@@ -391,13 +399,17 @@ function em_docs_create( array $p ) {
 	], true );
 	if ( is_wp_error( $id ) ) return $id;
 
-	if ( ! empty( $p['categories'] ) ) em_docs_set_categories( $id, (array) $p['categories'] );
-	return [ 'success' => true, 'data' => em_docs_row( get_post( $id ) ) ];
+	if ( ! empty( $p['categories'] ) ) em_docs_set_categories( $id, (array) $p['categories'], $cfg['tax'] );
+	if ( ! empty( $p['tags'] ) && $cfg['tag_tax'] ) em_docs_set_tags( $id, (array) $p['tags'], $cfg['tag_tax'] );
+	if ( ! empty( $p['featured_image_id'] ) ) set_post_thumbnail( $id, (int) $p['featured_image_id'] );
+	elseif ( ! empty( $p['featured_image_url'] ) ) em_docs_sideload_thumb( $id, (string) $p['featured_image_url'] );
+
+	return [ 'success' => true, 'data' => em_docs_row( get_post( $id ), $cfg ) ];
 }
 
 /* ---------- UPDATE ---------- */
-function em_docs_update( array $p ) {
-	$post = em_docs_get_doc( $p['id'] ?? 0 );
+function em_docs_update( array $p, array $cfg ) {
+	$post = em_docs_get_doc( $p['id'] ?? 0, $cfg );
 	if ( is_wp_error( $post ) ) return $post;
 	if ( ! current_user_can( 'edit_post', $post->ID ) ) return new WP_Error( 'forbidden', 'Not allowed.', [ 'status' => 403 ] );
 
@@ -406,51 +418,92 @@ function em_docs_update( array $p ) {
 	if ( isset( $p['content'] ) ) $upd['post_content'] = wp_kses_post( $p['content'] );
 	if ( isset( $p['excerpt'] ) ) $upd['post_excerpt'] = sanitize_textarea_field( $p['excerpt'] );
 	if ( isset( $p['slug'] ) )    $upd['post_name']    = sanitize_title( $p['slug'] );
+	if ( isset( $p['status'] ) && in_array( $p['status'], [ 'draft', 'publish', 'pending', 'private' ], true ) ) {
+		$upd['post_status'] = ( 'publish' === $p['status'] && ! current_user_can( 'publish_posts' ) ) ? 'pending' : $p['status'];
+	}
 
 	$res = wp_update_post( $upd, true );
 	if ( is_wp_error( $res ) ) return $res;
 
-	// "categories": [] removes all categories -> URL becomes /docs/title/
-	if ( isset( $p['categories'] ) ) em_docs_set_categories( $post->ID, (array) $p['categories'] );
-	return [ 'success' => true, 'data' => em_docs_row( get_post( $post->ID ) ) ];
+	// docs: "categories": [] -> URL becomes /docs/title/
+	// blog: "categories": [] -> falls back to the default category (Uncategorized)
+	if ( isset( $p['categories'] ) ) em_docs_set_categories( $post->ID, (array) $p['categories'], $cfg['tax'] );
+	if ( isset( $p['tags'] ) && $cfg['tag_tax'] ) em_docs_set_tags( $post->ID, (array) $p['tags'], $cfg['tag_tax'] );
+	if ( isset( $p['featured_image_id'] ) ) {
+		$p['featured_image_id'] ? set_post_thumbnail( $post->ID, (int) $p['featured_image_id'] ) : delete_post_thumbnail( $post->ID );
+	} elseif ( ! empty( $p['featured_image_url'] ) ) {
+		em_docs_sideload_thumb( $post->ID, (string) $p['featured_image_url'] );
+	}
+
+	return [ 'success' => true, 'data' => em_docs_row( get_post( $post->ID ), $cfg ) ];
 }
 
 /* ---------- PUBLISH / DRAFT ---------- */
-function em_docs_set_status( array $p, string $status ) {
-	$post = em_docs_get_doc( $p['id'] ?? 0 );
+function em_docs_set_status( array $p, array $cfg, string $status ) {
+	$post = em_docs_get_doc( $p['id'] ?? 0, $cfg );
 	if ( is_wp_error( $post ) ) return $post;
 	if ( ! current_user_can( 'edit_post', $post->ID ) ) return new WP_Error( 'forbidden', 'Not allowed.', [ 'status' => 403 ] );
 	if ( 'publish' === $status && ! current_user_can( 'publish_posts' ) ) return new WP_Error( 'forbidden', 'You cannot publish.', [ 'status' => 403 ] );
 
 	$res = wp_update_post( [ 'ID' => $post->ID, 'post_status' => $status ], true );
 	if ( is_wp_error( $res ) ) return $res;
-	return [ 'success' => true, 'data' => em_docs_row( get_post( $post->ID ) ) ];
+	return [ 'success' => true, 'data' => em_docs_row( get_post( $post->ID ), $cfg ) ];
 }
 
 /* ---------- DELETE (trash by default, "force": true = permanent) ---------- */
-function em_docs_delete( array $p ) {
-	$post = em_docs_get_doc( $p['id'] ?? 0 );
+function em_docs_delete( array $p, array $cfg ) {
+	$post = em_docs_get_doc( $p['id'] ?? 0, $cfg );
 	if ( is_wp_error( $post ) ) return $post;
 	if ( ! current_user_can( 'delete_post', $post->ID ) ) return new WP_Error( 'forbidden', 'Not allowed.', [ 'status' => 403 ] );
 
 	$force = ! empty( $p['force'] );
 	$done  = $force ? wp_delete_post( $post->ID, true ) : wp_trash_post( $post->ID );
 	if ( ! $done ) return new WP_Error( 'delete_failed', 'Could not delete.', [ 'status' => 500 ] );
-	return [ 'success' => true, 'id' => $post->ID, 'deleted' => $force ? 'permanently' : 'trashed' ];
+	return [ 'success' => true, 'table' => $cfg['key'], 'id' => $post->ID, 'deleted' => $force ? 'permanently' : 'trashed' ];
 }
 
-/* ---------- categories: accepts IDs, slugs or names; creates missing top-level ones ---------- */
-function em_docs_set_categories( int $post_id, array $cats ) {
+/* ---------- categories: IDs, slugs or names; creates missing top-level ones ---------- */
+function em_docs_set_categories( int $post_id, array $cats, string $tax ) {
 	$ids = [];
 	foreach ( $cats as $c ) {
 		if ( is_numeric( $c ) ) { $ids[] = (int) $c; continue; }
-		$term = get_term_by( 'slug', sanitize_title( $c ), EM_DOCS_TAX ) ?: get_term_by( 'name', $c, EM_DOCS_TAX );
+		$term = get_term_by( 'slug', sanitize_title( $c ), $tax ) ?: get_term_by( 'name', $c, $tax );
 		if ( ! $term && current_user_can( 'manage_categories' ) ) {
-			$new = wp_insert_term( sanitize_text_field( $c ), EM_DOCS_TAX );
+			$new = wp_insert_term( sanitize_text_field( $c ), $tax );
 			if ( ! is_wp_error( $new ) ) $ids[] = (int) $new['term_id'];
 		} elseif ( $term ) {
 			$ids[] = $term->term_id;
 		}
 	}
-	wp_set_object_terms( $post_id, $ids, EM_DOCS_TAX );
+
+	if ( 'category' === $tax ) {
+		wp_set_post_categories( $post_id, $ids ); // empty -> default category
+	} else {
+		wp_set_object_terms( $post_id, $ids, $tax );
+	}
+}
+
+/* ---------- tags (blog only): IDs or names; missing names are created ---------- */
+function em_docs_set_tags( int $post_id, array $tags, string $tax ) {
+	$clean = array_map( function ( $t ) {
+		return is_numeric( $t ) ? (int) $t : sanitize_text_field( $t );
+	}, $tags );
+	wp_set_object_terms( $post_id, $clean, $tax ); // [] removes all tags
+}
+
+/* ---------- featured image from a URL (used when another site pushes a post here) ---------- */
+function em_docs_sideload_thumb( int $post_id, string $url ) {
+	$url = esc_url_raw( $url );
+	if ( ! $url ) return;
+	// Same image already downloaded for this post -> skip
+	if ( get_post_meta( $post_id, '_em_source_thumb_url', true ) === $url && has_post_thumbnail( $post_id ) ) return;
+
+	require_once ABSPATH . 'wp-admin/includes/media.php';
+	require_once ABSPATH . 'wp-admin/includes/file.php';
+	require_once ABSPATH . 'wp-admin/includes/image.php';
+
+	$att = media_sideload_image( $url, $post_id, null, 'id' );
+	if ( is_wp_error( $att ) ) return;
+	set_post_thumbnail( $post_id, (int) $att );
+	update_post_meta( $post_id, '_em_source_thumb_url', $url );
 }
