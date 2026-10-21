@@ -298,7 +298,7 @@ get_header()
 
     <!-- RIGHT FAQ -->
     <div>
-      <h2 class="text-[48px] font-bold mb-6">What We Do?</h2>
+      <h2 class="text-[48px] font-bold mb-6">What We Offer?</h2>
       <p class="text-gray-600 mb-10">
         We offer an AI-driven automation set up that facilitates:
       </p>

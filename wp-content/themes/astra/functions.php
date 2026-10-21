@@ -1001,14 +1001,20 @@ function add_google_one_tap_signin() {
     // Your Google OAuth Client ID - replace with your actual Client ID from Google Cloud Console
     $client_id = '568468862727-9bph90edbsed5dhr95ga15quhfuebap6.apps.googleusercontent.com';
     
-    // Add Google One Tap script to wp_head
-    add_action('wp_head', function() use ($client_id) {
-        // Only show to non-logged in users
+    // Add Google GSI Client Library to wp_head (valid script element in head)
+    add_action('wp_head', function() {
+        if (is_user_logged_in()) {
+            return;
+        }
+        echo '<script src="https://accounts.google.com/gsi/client" async defer></script>' . "\n";
+    });
+
+    // Add Google One Tap container element and handler to wp_body_open (valid div element inside body)
+    add_action('wp_body_open', function() use ($client_id) {
         if (is_user_logged_in()) {
             return;
         }
         ?>
-        <script src="https://accounts.google.com/gsi/client" async defer></script>
         <div id="g_id_onload"
              data-client_id="<?php echo esc_attr($client_id); ?>"
              data-callback="handleCredentialResponse"

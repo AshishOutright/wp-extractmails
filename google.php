@@ -338,7 +338,7 @@ try {
     <main class="auth-shell">
         <section class="signup-box" aria-label="ExtractMails account connection">
             <div class="brand-row">
-                <img class="logo" src="https://www.extractmails.com/wp-content/uploads/2024/12/mailextracter-final-domain-logo-188x44.png" alt="ExtractMails Logo">
+                <img class="logo" src="https://www.extractmails.com/wp-content/uploads/2024/12/extractmails-footer-logo.png" alt="ExtractMails Logo">
                 <span class="secure-pill">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>

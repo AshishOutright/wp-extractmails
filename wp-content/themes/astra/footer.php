@@ -1,190 +1,345 @@
-<section class="relative overflow-visible rounded-t-[55px] mx-auto px-5 pt-[60px] pb-12 md:pb-20 bg-[#FFFFFF] ">
+<?php
+/**
+ * Footer template for ExtractMails SaaS Theme (astra_7 child theme)
+ */
+?>
+<style>
+/* ==========================================================================
+   ExtractMails Reference Footer Design (Matches ExtractMails-Website-Updated)
+   ========================================================================== */
+.reference-footer {
+  position: relative;
+  width: 100%;
+  padding: 48px 24px 64px;
+  background: transparent;
+  color: #132B50;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  box-sizing: border-box;
+}
 
-  <!-- ONLY 2 GRADIENT BLOBS -->
-  <div class="absolute inset-0 pointer-events-none">
+.reference-footer-panel {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 44px 48px 36px;
+  border: 1px solid #D5EAFD;
+  border-radius: 28px;
+  background: #ffffff;
+  box-shadow: 0 12px 40px rgba(5, 40, 155, 0.08);
+  box-sizing: border-box;
+}
 
-    <!-- LEFT -->
-    <div class="absolute  hidden lg:block
-      w-[520px] h-[500px] 
-      bg-[#383cff]/40 
-      rounded-full 
-      blur-[180px] 
-      -top-[10px] left-[0%]">
+.reference-footer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 34px;
+}
+
+.reference-footer-logo-link {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.reference-footer-logo-link:hover {
+  transform: translateY(-1px);
+}
+
+.reference-footer-logo {
+  display: block;
+  width: auto;
+  height: 84px;
+  max-width: 100%;
+  object-fit: contain;
+  margin: -14px 0;
+}
+
+.reference-social {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+}
+
+.reference-social a {
+  font-size: 14px;
+  font-weight: 500;
+  color: #0048C2;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.reference-social a:hover {
+  color: #05289B;
+  text-decoration: underline;
+}
+
+.reference-footer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.35fr 1fr 1fr;
+  gap: 24px;
+}
+
+.reference-footer-column {
+  min-width: 0;
+}
+
+.reference-footer-column h2 {
+  margin: 0 0 16px;
+  padding: 12px 10px;
+  font-size: 15px;
+  line-height: 1.4;
+  letter-spacing: 0;
+  font-weight: 600;
+  text-align: center;
+  color: #ffffff;
+  border-radius: 8px;
+  background: linear-gradient(105deg, #05289B, #0048C2);
+  box-shadow: 0 2px 6px rgba(5, 40, 155, 0.15);
+}
+
+.reference-footer-items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 8px;
+}
+
+.reference-footer-items a,
+.reference-footer-items span {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #132B50;
+  text-decoration: none;
+  display: block;
+  transition: color 0.15s ease;
+}
+
+.reference-footer-items a:hover {
+  color: #0048C2;
+  text-decoration: underline;
+}
+
+.reference-footer-items .footer-unlinked {
+  color: #132B50;
+  cursor: default;
+}
+
+/* Company column button-styled links */
+.reference-footer-column:last-child .reference-footer-items {
+  padding: 0;
+  gap: 12px;
+}
+
+.reference-footer-column:last-child .reference-footer-items a {
+  text-align: center;
+  padding: 11px 14px;
+  border: 1px solid #D5EAFD;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #132B50;
+  background: #ffffff;
+  display: block;
+  transition: all 0.2s ease;
+}
+
+.reference-footer-column:last-child .reference-footer-items a:hover {
+  border-color: #0048C2;
+  background: #F6FAFD;
+  color: #0048C2;
+  text-decoration: none;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 72, 194, 0.08);
+}
+
+.reference-footer-bottom {
+  margin-top: 36px;
+  padding-top: 26px;
+  border-top: 1px solid #D5EAFD;
+  text-align: center;
+}
+
+.reference-footer-bottom p {
+  max-width: 820px;
+  margin: 0 auto;
+  color: #52647F;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.reference-footer-legal {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 20px;
+  font-size: 13px;
+  color: #52647F;
+}
+
+.reference-footer-legal a {
+  color: #52647F;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.reference-footer-legal a:hover {
+  color: #0048C2;
+  text-decoration: underline;
+}
+
+@media (max-width: 1100px) {
+  .reference-footer-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .reference-footer-panel {
+    padding: 32px 28px;
+  }
+}
+
+@media (max-width: 700px) {
+  .reference-footer {
+    padding: 24px 16px 40px;
+  }
+  .reference-footer-panel {
+    padding: 24px 20px;
+    border-radius: 20px;
+  }
+  .reference-footer-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 16px;
+  }
+  .reference-footer-top {
+    align-items: flex-start;
+  }
+  .reference-footer-logo {
+    height: 64px;
+    margin: -10px 0;
+  }
+  .reference-social {
+    justify-content: flex-end;
+    gap: 10px 16px;
+    max-width: 220px;
+  }
+  .reference-footer-column:last-child {
+    grid-column: 1 / -1;
+  }
+  .reference-footer-column:last-child .reference-footer-items {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .reference-footer-items {
+    padding: 0 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .reference-footer-grid {
+    grid-template-columns: 1fr;
+  }
+  .reference-footer-column:last-child .reference-footer-items {
+    grid-template-columns: 1fr;
+  }
+  .reference-footer-legal {
+    gap: 12px 18px;
+  }
+}
+</style>
+
+<footer class="reference-footer" aria-label="Website footer">
+  <div class="reference-footer-panel">
+    <div class="reference-footer-top">
+      <a href="https://www.extractmails.com/" class="reference-footer-logo-link" aria-label="ExtractMails home">
+        <img src="https://www.extractmails.com/wp-content/uploads/2024/12/extractmails-footer-logo.png" alt="ExtractMails" class="reference-footer-logo">
+      </a>
+      <div class="reference-social" aria-label="Social profiles">
+        <a href="https://www.facebook.com/profile.php?id=61577511276950" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a href="https://x.com/MailsExtract" target="_blank" rel="noopener noreferrer">X</a>
+        <a href="https://www.linkedin.com/company/112438965/admin/page-posts/published/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://api.whatsapp.com/send?phone=917275894867" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      </div>
     </div>
 
-    <!-- RIGHT -->
-    <div class="absolute  hidden lg:block
-      w-[520px] h-[500px] 
-      bg-[#00ff55]/40 
-      rounded-full 
-      blur-[180px] 
-      -top-[10px] right-[0%]">
+    <div class="reference-footer-grid">
+      <!-- Free tools -->
+      <section class="reference-footer-column">
+        <h2>Free tools</h2>
+        <div class="reference-footer-items">
+          <a href="https://www.extractmails.com/tools/reverse-email-lookup/" target="_blank">Reverse Email Lookup</a>
+          <a href="https://www.extractmails.com/tools/gmail-generator/" target="_blank">Gmail Generator</a>
+          <a href="https://www.extractmails.com/tools/email-spam-checker/" target="_blank">Email Spam Checker</a>
+          <a href="https://www.extractmails.com/tools/ai-email-writer/" target="_blank">AI Email Writer</a>
+        </div>
+      </section>
+
+      <!-- Compare -->
+      <section class="reference-footer-column">
+        <h2>Compare</h2>
+        <div class="reference-footer-items">
+          <span class="footer-unlinked" title="Destination not linked yet">vs Hunter</span>
+          <span class="footer-unlinked" title="Destination not linked yet">vs Apollo</span>
+          <span class="footer-unlinked" title="Destination not linked yet">vs Snov</span>
+          <span class="footer-unlinked" title="Destination not linked yet">vs Zoominfo</span>
+          <span class="footer-unlinked" title="Destination not linked yet">vs RocketReach</span>
+        </div>
+      </section>
+
+      <!-- Useful Resources -->
+      <section class="reference-footer-column">
+        <h2>Useful Resources</h2>
+        <div class="reference-footer-items">
+          <a href="https://www.extractmails.com/blog/how-to-use-a-google-maps-scraper-for-lead-generation/" target="_blank">Google Maps Scraper for Lead Generation</a>
+          <a href="https://www.extractmails.com/blog/how-to-recover-comcast-email-password/" target="_blank">Recover Comcast Email Passwords</a>
+          <a href="https://www.extractmails.com/blog/how-to-check-icloud-email/" target="_blank">Check iCloud Email in a Few Easy Steps</a>
+          <a href="https://www.extractmails.com/blog/how-to-improve-email-deliverability/" target="_blank">Improve Email Deliverability for Better Open Rates</a>
+          <a href="https://www.extractmails.com/blog/how-to-extract-emails-from-linkedin/" target="_blank">Extract Emails from LinkedIn Without Coding</a>
+        </div>
+      </section>
+
+      <!-- Services -->
+      <section class="reference-footer-column">
+        <h2>Services</h2>
+        <div class="reference-footer-items">
+          <a href="https://www.extractmails.com/email-scraper/" target="_blank">Email Scraper</a>
+          <a href="https://www.extractmails.com/bulk-email-finder/" target="_blank">Bulk Email Finder</a>
+          <a href="https://www.extractmails.com/website-email-extraction-services/" target="_blank">Expert Email Extraction</a>
+          <a href="https://www.extractmails.com/email-extractor/" target="_blank">Email Extractor</a>
+          <a href="https://www.extractmails.com/lead-generation-services/" target="_blank">Lead Generation</a>
+        </div>
+      </section>
+
+      <!-- Company -->
+      <section class="reference-footer-column">
+        <h2>Company</h2>
+        <div class="reference-footer-items">
+          <a href="https://www.extractmails.com/about-us-page/" target="_blank">About Us</a>
+          <a href="https://www.extractmails.com/contact-page/" target="_blank">Contact Us</a>
+          <a href="https://www.extractmails.com/blog/" target="_blank">Blogs</a>
+        </div>
+      </section>
     </div>
 
-  </div>
-
-  <!-- TOP FADE -->
- 
-
-  <div class="max-w-[1900px] mx-auto px-2 md:px-6 relative z-10">
-
-    <!-- MAIN CARD -->
-    <div class="bg-[#FFFFFF] rounded-[24px] md:rounded-[32px] px-2 md:px-10 py-8 md:py-12">
-
-      <!-- TOP BAR -->
-      <div class="flex flex-col md:flex-row items-center justify-between mb-8 md:mb-10 gap-5">
-
-        <!-- LOGO -->
-        <a href="https://www.extractmails.com/">
-          <img src="https://www.extractmails.com/wp-content/uploads/2024/12/mailextracter-final-domain-logo-188x44.png" alt="Logo"
-               class="h-8 md:h-10">
-        </a>
-
-        <!-- SOCIAL ICONS -->
-        <div class="flex gap-3 md:gap-4 justify-center md:justify-end flex-wrap">
-          <!-- <a href="https://www.youtube.com/@OutrightSystems" target="_blank" class="w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white text-xs md:text-sm"><img src="https://www.extractmails.com/wp-content/uploads/2026/02/Group-59-1.png" alt="YouTube"></a> -->
-          <a href="https://www.facebook.com/people/ExtractMails/61577511276950/" target="_blank" class="w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white text-xs md:text-sm"><img src="https://www.extractmails.com/wp-content/uploads/2026/02/Group-61-3.png" alt="Facebook"></a>
-          <a href="https://x.com/MailsExtract" target="_blank" class="w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white text-xs md:text-sm"><img src="https://www.extractmails.com/wp-content/uploads/2026/02/Group-60-2.png" alt="Twitter"></a>
-          <a href="https://www.linkedin.com/company/extractmails/" target="_blank" class="w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white text-xs md:text-sm"><img src="https://www.extractmails.com/wp-content/uploads/2026/02/Group-62-2.png" alt="LinkedIn"></a>
-          <!-- <a href="https://www.instagram.com/outrightstore/" target="_blank" class="w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white text-xs md:text-sm"><img src="https://www.extractmails.com/wp-content/uploads/2026/02/Group-63-1.png" alt="Instagram"></a> -->
-          <a href="https://api.whatsapp.com/send?phone=917275894867" target="_blank" class="w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center text-white text-xs md:text-sm"><img src="https://www.extractmails.com/wp-content/uploads/2026/02/Group-64-1.png" alt="WhatsApp"></a>
-             <a
-    href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=sales@extractmails.com"
-    target="_blank"
-    rel="noopener noreferrer"
-    aria-label="Email us"
-    title="Email us"
-    class="w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center"
-  >
-    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28"
-         viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"
-         class="text-gray-600">
-      <rect x="2.75" y="5" width="18.5" height="14" rx="2.5"/>
-      <path d="m4.25 7 6.42 4.72a2.25 2.25 0 0 0 2.66 0L19.75 7"/>
-    </svg>
-  </a>
-        </div>
-
+    <!-- Divider & Bottom Info -->
+    <div class="reference-footer-bottom">
+      <p>
+        <strong>Copyright &copy; 2026 ExtractMails&trade;.</strong> All Rights Reserved. The <strong>OutRight&reg; logo is a trademark of OutRight Systems Pvt. Ltd.</strong> All content and materials on this site are protected by copyright.
+      </p>
+      <div class="reference-footer-legal" aria-label="Legal information">
+        <a href="https://www.extractmails.com/gdpr-page/" target="_blank">GDPR Legal</a>
+        <a href="https://www.extractmails.com/cookie-policy/" target="_blank">Cookie Policy</a>
+        <a href="https://www.extractmails.com/privacy-and-policy/" target="_blank">Privacy policy</a>
+        <a href="https://www.extractmails.com/terms-and-conditions/" target="_blank">Terms</a>
       </div>
-
-      <!-- CATEGORY PILLS -->
-    
-
-      <!-- LINKS GRID -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 md:gap-8 text-[12px] md:text-[13px] text-gray-600 leading-6">
-
-        <div class="space-y-2">
-          <div class="bg-[linear-gradient(90deg,rgba(3,4,88,1)_0%,rgba(56,60,255,1)_100%)] text-white text-center py-2 md:py-3 rounded-lg text-sm md:text-[22px]">
-  Free tools
-</div>
-          <a href="https://www.extractmails.com/tools/reverse-email-lookup/" target="_blank" class="block hover:text-blue-600 px-4">Reverse Email Lookup</a>
-          <a href="https://www.extractmails.com/tools/gmail-generator/" target="_blank" class="block hover:text-blue-600 px-4">Gmail Generator</a>
-          <a href="https://www.extractmails.com/tools/email-spam-checker/" target="_blank" class="block hover:text-blue-600 px-4">Email Spam Checker </a>
-          <a href="https://www.extractmails.com/tools/ai-email-writer/" target="_blank" class="block hover:text-blue-600 px-4">AI Email Writer</a>
-         
-        </div>
-
-         <div class="space-y-2">
-          <div class="bg-[linear-gradient(90deg,rgba(3,4,88,1)_0%,rgba(56,60,255,1)_100%)] text-white text-center py-2 md:py-3 rounded-lg text-sm md:text-[22px]">
-  Compare
-</div>
-          <a href="https://www.extractmails.com/comparison/hunter-io-vs-extractmails/" target="_blank" class="block hover:text-blue-600 px-4"> vs Hunter</a>
-          <a href="https://www.extractmails.com/comparison/apollo-io-vs-extractmails/" target="_blank" class="block hover:text-blue-600 px-4"> vs Apollo</a>
-           <a href="https://www.extractmails.com/comparison/snov-io-vs-extractmails/" target="_blank" class="block hover:text-blue-600 px-4"> vs Snov</a>
-          <a href="https://www.extractmails.com/comparison/zoominfo-vs-extractmails/" target="_blank" class="block hover:text-blue-600 px-4"> vs Zoominfo</a>
-          <a href="https://www.extractmails.com/comparison/rocketreach-vs-extractmails/" target="_blank" class="block hover:text-blue-600 px-4"> vs RocketReach</a>
-          
-         
-        </div>
-
-        <div class="space-y-2">
-          
-               <div class="bg-[linear-gradient(90deg,rgba(3,4,88,1)_0%,rgba(56,60,255,1)_100%)] text-white text-center py-2 md:py-3 rounded-lg text-sm md:text-[22px]">
- Useful Resources
-</div>
-          <a href="https://www.extractmails.com/blog/how-to-use-a-google-maps-scraper-for-lead-generation/" target="_blank" class="block hover:text-blue-600 px-4"> Google Maps Scraper for Lead Generation</a>
-          <a href="https://www.extractmails.com/blog/how-to-recover-comcast-email-password/" target="_blank" class="block hover:text-blue-600 px-4"> Recover Comcast Email Passwords</a>
-          <a href="https://www.extractmails.com/blog/how-to-check-icloud-email/" target="_blank" class="block hover:text-blue-600 px-4">Check iCloud Email in a Few Easy Steps </a>
-          <a href="https://www.extractmails.com/blog/how-to-improve-email-deliverability/" target="_blank" class="block hover:text-blue-600 px-4"> Improve Email Deliverability for Better Open Rates </a>
-          <a href="https://www.extractmails.com/blog/how-to-extract-emails-from-linkedin/" target="_blank" class="block hover:text-blue-600 px-4"> Extract Emails from LinkedIn Without Coding</a>
-          
-        </div>
-
-       
-
-        <div class="space-y-2">
-          
-                <div class="bg-[linear-gradient(90deg,rgba(3,4,88,1)_0%,rgba(56,60,255,1)_100%)] text-white text-center py-2 md:py-3 rounded-lg text-sm md:text-[22px]">
-Services
-</div>
-          <a href="https://www.extractmails.com/email-scraper/" target="_blank" class="block hover:text-blue-600 px-4">Email Scraper </a>
-          <a href="https://www.extractmails.com/bulk-email-finder/" target="_blank" class="block hover:text-blue-600 px-4"> Bulk Email Finder </a>
-          <a href="https://www.extractmails.com/website-email-extraction-services/" target="_blank" class="block hover:text-blue-600 px-4">Expert Email Extraction </a>
-          <a href="https://www.extractmails.com/email-extractor/" target="_blank" class="block hover:text-blue-600 px-4">Email Extractor</a>
-          <a href="https://www.extractmails.com/lead-generation-services/" target="_blank" class="block hover:text-blue-600 px-4">Lead Generation</a>
-          
-        </div>
-
-        <div class="space-y-2">
-        
-                <div class="bg-[linear-gradient(90deg,rgba(3,4,88,1)_0%,rgba(56,60,255,1)_100%)] text-white text-center py-2 md:py-3 rounded-lg text-sm md:text-[22px]">
-Company
-</div>
-         
-         <div class="p-[2px] rounded-[10px] bg-gradient-to-r from-black to-blue-600">
-        <div class="bg-white rounded-[10px] px-4 py-2 shadow-[0_8px_20px_rgba(59,59,255,0.15)]">
-           <a href="https://www.extractmails.com/about-us-page/" target="_blank" class="block   text-black rounded-lg text-sm text-center">About Us</a>
-</div>
-</div>
-
-    <div class="p-[2px] rounded-[10px] bg-gradient-to-r from-black to-blue-600">
-        <div class="bg-white rounded-[10px] px-4 py-2 shadow-[0_8px_20px_rgba(59,59,255,0.15)]">
-           <a href="https://www.extractmails.com/contact-page/" target="_blank" class="block   text-black rounded-lg text-sm text-center">Contact Us</a>
-</div>
-</div>
-    <div class="p-[2px] rounded-[10px] bg-gradient-to-r from-black to-blue-600">
-        <div class="bg-white rounded-[10px] px-4 py-2 shadow-[0_8px_20px_rgba(59,59,255,0.15)]">
-           <a href="https://www.extractmails.com/blog/" target="_blank" class="block   text-black rounded-lg text-sm text-center">Blogs</a>
-</div>
-</div>
-        
-        </div>
-
-      </div>
-
-      <!-- BUTTONS -->
-     
-
-      <!-- MINI LINKS -->
-     
-
-      <!-- DIVIDER -->
-      <div class="border-t mt-6 md:mt-8 pt-4 md:p-8  text-center text-[15px] md:text-xs text-gray-500 px-2">
-       <strong>Copyright © 2026 ExtractMails ™,</strong> All Rights Reserved. The <strong>OutRight® logo is a trademark of OutRight <br> Systems Pvt. Ltd.</strong> All content and materials on this site are protected by copyright
-      </div>
-
-      <!-- LEGAL -->
-      <div class="flex flex-wrap justify-center gap-4 md:gap-6 text-[15px] md:text-xs text-gray-500 mt-3 text-center">
-        <a href="https://www.extractmails.com/gdpr-page/" target="_blank" class="hover:text-blue-600">GDPR Legal</a>
-        <a href="https://www.extractmails.com/cookie-policy/" target="_blank" class="hover:text-blue-600">Cookie Policy</a>
-        <a href="https://www.extractmails.com/privacy-and-policy/" target="_blank" class="hover:text-blue-600">Privacy policy</a>
-        <a href="https://www.extractmails.com/terms-and-conditions/" target="_blank" class="hover:text-blue-600">Terms</a>
-      </div>
-
     </div>
-
   </div>
+</footer>
 
-  
-  </div>
- 
-  
-  
-
-
-</section>
-
+<?php wp_footer(); ?>
+<?php get_template_part( 'template-parts/components/extractmails-app-popup' ); ?>
 
 </body>
 </html>

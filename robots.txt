@@ -1,9 +1,74 @@
 User-agent: *
+Allow: /
+
+# WordPress Core
 Disallow: /wp-admin/
-Disallow: /*/feed/
-Disallow: /author/*/feed/
-Disallow: /comments/
-Disallow: /wp-json/
 Allow: /wp-admin/admin-ajax.php
 
-Sitemap: https://www.extractmails.com/sitemap_index.xml
+# Internal Search
+Disallow: /?s=
+Disallow: /search/
+
+# Tag Archives
+Disallow: /blog/tag/
+
+# Category Archives
+Disallow: /blog/category/
+
+# Blog Pagination
+Disallow: /blog/page/
+
+# Other Low-Value Archives / Feeds
+Disallow: /author/
+Disallow: /tag/
+Disallow: /feed/
+Disallow: /*/feed/
+Disallow: /comments/
+
+# Cloudflare Internal Endpoints
+Disallow: /cdn-cgi/
+
+# AI Crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+Sitemap:https://www.extractmails.com/sitemap_index.xml
